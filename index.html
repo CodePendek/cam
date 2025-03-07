@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CameraApp</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.x/dist/full.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&family=Caveat&family=Pacifico&family=Shadows+Into+Light&family=Indie+Flower&family=Amatic+SC&family=Dancing+Script&family=Architects+Daughter&family=Special+Elite&family=Covered+By+Your+Grace&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body class="min-h-screen flex flex-col items-center bg-base-100">
+    <!-- Navbar -->
+    <nav class="navbar bg-base-200 w-full shadow-md fixed top-0 z-10">
+        <div class="flex-1">
+            <a class="btn btn-ghost text-xl">CameraApp</a>
+        </div>
+        <div class="flex-none">
+            <button class="btn btn-ghost" onclick="toggleAbout()">
+                <i data-feather="info"></i>
+            </button>
+            <button class="btn btn-ghost" onclick="toggleDarkMode()">
+                <i data-feather="moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Section -->
+    <main class="flex-grow flex items-center justify-center mt-20">
+        <label for="fileInput" class="btn btn-circle btn-lg bg-primary text-white text-3xl hover:bg-primary-focus">
+            +
+        </label>
+        <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="openWatermarkModal()">
+    </main>
+
+    <!-- About Modal -->
+    <dialog id="aboutModal" class="modal">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg">Cara Menggunakan CameraApp</h3>
+            <p class="py-4">
+                1. Klik tombol "+" untuk mengunggah foto atau ambil foto dari kamera.<br>
+                2. Atur posisi, waktu, dan font watermark di modal yang muncul.<br>
+                3. Klik "OKE" untuk melihat pratinjau dan unduh hasilnya.
+            </p>
+            <div class="modal-action">
+                <button class="btn" onclick="closeAbout()">Tutup</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Watermark Modal -->
+    <dialog id="watermarkModal" class="modal">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg">Atur Jam</h3>
+            <form id="watermarkForm" class="space-y-4">
+                <div class="flex space-x-4">
+                    <div class="flex-1">
+                        <label class="label">Posisi Watermark</label>
+                        <select class="select select-bordered w-full" id="position">
+                            <option value="top-left">Kiri Atas</option>
+                            <option value="top-center">Tengah Atas</option>
+                            <option value="top-right">Kanan Atas</option>
+                            <option value="middle-left">Kiri Tengah</option>
+                            <option value="middle-center">Tengah</option>
+                            <option value="middle-right">Kanan Tengah</option>
+                            <option value="bottom-left">Kiri Bawah</option>
+                            <option value="bottom-center">Tengah Bawah</option>
+                            <option value="bottom-right">Kanan Bawah</option>
+                        </select>
+                    </div>
+                    <div class="flex-1">
+                        <label class="label">Atur Waktu</label>
+                        <select class="select select-bordered w-full" id="time">
+                            <option disabled>Masuk/Pulang</option>
+                            <option value="07:30">07:30</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12:30">12:30</option>
+                            <option value="13:30">13:30</option>
+                            <option value="19:30">19:30</option>
+                            <option disabled>Lembur</option>
+                            <option value="12:00">12:00</option>
+                            <option value="18:00">18:00</option>
+                            <option value="03:30">03:30</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="label">Pilih Font</label>
+                    <select class="select select-bordered w-full" id="font">
+                        <option value="Roboto Mono">Roboto Mono</option>
+                        <option value="Caveat">Caveat</option>
+                        <option value="Pacifico">Pacifico</option>
+                        <option value="Shadows Into Light">Shadows Into Light</option>
+                        <option value="Indie Flower">Indie Flower</option>
+                        <option value="Amatic SC">Amatic SC</option>
+                        <option value="Dancing Script">Dancing Script</option>
+                        <option value="Architects Daughter">Architects Daughter</option>
+                        <option value="Special Elite">Special Elite</option>
+                        <option value="Covered By Your Grace">Covered By Your Grace</option>
+                    </select>
+                </div>
+                <div class="form-control">
+                    <label class="label cursor-pointer">
+                        <span class="label-text">Bulatkan Waktu</span>
+                        <input type="checkbox" id="roundTime" checked class="checkbox" />
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary w-full">OKE</button>
+            </form>
+        </div>
+    </dialog>
+
+    <!-- Preview Modal -->
+    <dialog id="previewModal" class="modal">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg">Pratinjau</h3>
+            <canvas id="previewCanvas" class="w-full"></canvas>
+            <div class="modal-action space-x-2">
+                <button class="btn btn-primary" onclick="downloadImage()">
+                    <i data-feather="download"></i> Download
+                </button>
+                <button class="btn" onclick="retakeImage()">
+                    <i data-feather="refresh-ccw"></i> Retake
+                </button>
+                <button class="btn" onclick="shareImage()">
+                    <i data-feather="share-2"></i> Share
+                </button>
+            </div>
+        </div>
+    </dialog>
+
+    <script src="script.js"></script>
+    <script>
+        feather.replace(); // Inisialisasi Feather Icons
+    </script>
+</body>
+</html>
